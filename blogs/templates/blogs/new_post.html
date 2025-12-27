@@ -15,4 +15,14 @@
         {% bootstrap_button button_type="submit" content="发布文章" %}
     </form>
 
+    <style>
+        textarea[name="text"] {
+            resize: none; /* 禁用调整大小功能 */
+            min-height: 200px; /* 设置默认较大高度 */
+        }
+    </style>
+    
+    {% load static %}
+    <script src="{% static 'js/form_utils.js' %}"></script>
+
 {% endblock content %}

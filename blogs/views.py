@@ -1,19 +1,30 @@
 # blogs/views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required  # 1. 新增导入
-from django.http import Http404                            # 2. 新增导入(后面要用)
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .models import BlogPost
 from .forms import BlogPostForm
 
-# index 不需要保护
 def index(request):
-    # ...保持原样...
-    posts = BlogPost.objects.order_by('-date_added')
-    context = {'posts': posts}
+    # 1. 获取搜索关键词
+    query = request.GET.get('q')
+
+    # 2. 根据是否有关键词进行筛选，同时关联用户信息以优化查询
+    if query:
+        posts_list = BlogPost.objects.select_related('owner').filter(title__icontains=query).order_by('-date_added')
+    else:
+        posts_list = BlogPost.objects.select_related('owner').order_by('-date_added')
+
+    # 3. 分页处理 (每页5篇)
+    paginator = Paginator(posts_list, 5)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+
+    context = {'posts': posts, 'query': query}
     return render(request, 'blogs/index.html', context)
 
-@login_required  # 3. 加锁：只有登录才能访问
+@login_required
 def new_post(request):
     """添加新帖子"""
     if request.method != 'POST':
@@ -32,14 +43,15 @@ def new_post(request):
     context = {'form': form}
     return render(request, 'blogs/new_post.html', context)
 
-@login_required  # 4. 加锁
+@login_required
 def edit_post(request, post_id):
     """编辑既有帖子"""
     post = get_object_or_404(BlogPost, id=post_id)
 
+    # 权限检查：只有文章所有者才能编辑
     if post.owner != request.user:
-        # 以前是 raise Http404，现在改成渲染提示页
-        return render(request, 'blogs/not_owner.html')
+        return render(request, 'blogs/not_owner.html',
+                     {'message': '你不能编辑这篇帖子，因为它的作者不是你。'})
 
     if request.method != 'POST':
         form = BlogPostForm(instance=post)
@@ -51,3 +63,19 @@ def edit_post(request, post_id):
 
     context = {'post': post, 'form': form}
     return render(request, 'blogs/edit_post.html', context)
+
+@login_required
+def delete_post(request, post_id):
+    """删除帖子"""
+    post = get_object_or_404(BlogPost, id=post_id)
+
+    # 权限检查：只有文章所有者才能删除
+    if post.owner != request.user:
+        return render(request, 'blogs/not_owner.html',
+                     {'message': '你不能删除这篇帖子，因为它的作者不是你。'})
+
+    if request.method == 'POST':
+        post.delete()
+        return redirect('blogs:index')
+
+    return redirect('blogs:index')

@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     # 用户
     'users',
+    # markdown支持
+    'markdownify',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -109,9 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'  # 修改为中文
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'  # 修改为本地时区
 
 USE_I18N = True
 
@@ -127,6 +130,54 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 允许更多标签（比如图片）
+MARKDOWNIFY = {
+    "default": {
+        "BLEACH": True,
+
+        # 1. 扩展插件：确保 pymdownx.tilde 被加载
+        "MARKDOWN_EXTENSIONS": [
+            'markdown.extensions.extra',  # 基础包
+            'markdown.extensions.nl2br',  # 换行
+            'pymdownx.tilde',  # 修复删除线 (~~)
+            'pymdownx.tasklist',  # 任务列表
+        ],
+
+        # 2. 标签白名单：必须包含 del (删除线) 和 hr (分割线)
+        "WHITELIST_TAGS": [
+            'a', 'abbr', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'p', 'strong', 'ul',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'pre', 'br', 'hr', 'img',
+            'sub', 'sup', 'del',  # <--- 关键：允许 del 标签
+            'table', 'thead', 'tbody', 'th', 'tr', 'td',
+            'input', 'span', 'div'
+        ],
+
+        "WHITELIST_ATTRS": {
+            '*': ['class', 'style'],
+            'a': ['href', 'title', 'target'],
+            'img': ['src', 'alt', 'title', 'width', 'height'],
+            'input': ['type', 'checked', 'disabled'],
+        },
+
+        "WHITELIST_STYLES": [
+            'color', 'font-weight', 'background-color', 'width', 'height',
+            'text-align', 'border'
+        ],
+        "MARKDOWN_EXTENSION_CONFIGS": {
+            "pymdownx.tilde": {
+                "subscript": False,  # ✅ 只关这个
+            },
+            "pymdownx.tasklist": {
+                "custom_checkbox": True,
+            },
+        },
+
+        "STRIP": False,
+    }
+}
 
 # 未登录用户的重定向地址
 LOGIN_URL = 'users:login'

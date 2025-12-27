@@ -4,7 +4,7 @@
 {% block content %}
     <div class="alert alert-danger" role="alert">
         <h4 class="alert-heading">操作被拒绝！</h4>
-        <p>你不能编辑这篇帖子，因为它的作者不是你。</p>
+        <p>{{ message|default:"你不能执行此操作，因为这不是你的内容。" }}</p>
         <hr>
         <a href="{% url 'blogs:index' %}" class="btn btn-secondary">返回主页</a>
     </div>

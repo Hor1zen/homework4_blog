@@ -11,5 +11,4 @@ class BlogPost(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         """返回模型的字符串表示"""
-        return self.title
-
+        return f"{self.title} (作者: {self.owner.username})"

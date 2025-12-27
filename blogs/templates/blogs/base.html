@@ -9,38 +9,287 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Blog Project</title>
 
-    <!-- 引入 Bootstrap CSS -->
-    {% bootstrap_css %}
+    <!-- 1. 主题：切换为 Spacelab -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/spacelab/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- 2. 全局样式重写 -->
+    <style>
+        html{
+            overflow-y: scroll;
+<!--            scrollbar-gutter: stable;-->
+        }
+/* =========================================================
+   A. 字体 & 基础排版
+   ========================================================= */
+:root {
+    --font-body: "Segoe UI", Roboto, "Helvetica Neue",
+        "PingFang SC", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", Consolas, "Monaco", monospace;
+}
+.card-header {
+            /* 3.2rem 约等于 51px，这能完美容纳 btn-sm 按钮并保持两端对齐的视觉平衡 */
+            min-height: 3.2rem;
+            display: flex;
+            align-items: center;
+        }
+.card-text {
+    font-family: var(--font-body);
+    color: #212529;
+    font-size: 1.05rem;
+    line-height: 1.7;
+
+    /* ⭐ 关键：左右留白，让文字重心更稳 */
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+/* =========================================================
+   B. 行内代码 & 代码块
+   ========================================================= */
+
+/* 行内代码 */
+code {
+    background-color: #f8f9fa;
+    color: #d63384;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    border: 1px solid #e9ecef;
+    font-size: 0.95em;
+}
+
+/* 代码块容器 */
+pre {
+    background-color: #2d3436;
+    color: #dfe6e9;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    margin: 1.25rem 0;
+    overflow-x: auto; /* 防止撑破布局 */
+}
+
+/* 避免 code 套娃 */
+pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font-size: 0.95em;
+}
+
+/* =========================================================
+   C. 标题
+   ========================================================= */
+.card-text h1,
+.card-text h2,
+.card-text h3,
+.card-text h4,
+.card-text h5,
+.card-text h6 {
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* =========================================================
+   D. 分割线
+   ========================================================= */
+hr {
+    border: 0;
+    border-top: 2px solid #ced4da;
+    margin: 2rem 0;
+}
+
+/* =========================================================
+   E. 表格
+   ========================================================= */
+.card-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+}
+
+.card-text th,
+.card-text td {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+}
+
+.card-text th {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+
+/* =========================================================
+   F. 引用
+   ========================================================= */
+blockquote {
+    border-left: 4px solid #447e9b;
+    background-color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0;
+    color: #495057;
+    border-radius: 0 5px 5px 0;
+}
+
+/* =========================================================
+   G. 图片
+   ========================================================= */
+.card-text img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================================
+   H. 删除线（~~text~~）
+   ========================================================= */
+del {
+    color: #6c757d;
+    text-decoration: line-through;
+}
+
+/* =========================================================
+   I. 任务列表（GFM）
+   ========================================================= */
+.task-list-item {
+    list-style: none;
+    margin-left: -1.2em;
+}
+
+.task-list-item input[type="checkbox"] {
+    margin-right: 0.5em;
+}
+
+/* =========================================================
+   J. 列表微调（防止太贴边）
+   ========================================================= */
+.card-text ul,
+.card-text ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+        /* === J. 修复搜索框焦点边框覆盖问题 === */
+    .input-group > .form-control:focus {
+        /* 确保输入框在获得焦点时，其外发光不会显得溢出到按钮上方 */
+        z-index: 0;
+        box-shadow: none;
+        border-color: #dee2e6; /* 保持与 Spacelab 边框颜色一致 */
+    }
+    .input-group .btn:focus {
+        z-index: 0;
+    }
+
+    /* === K. 分页样式重写：打破长方形感，统一主题色 === */
+    /* 1. 去掉父容器的阴影和边框，让按钮独立 */
+    .pagination {
+        border: none;
+        background: transparent;
+    }
+
+    /* 2. 让每一个分页项之间有间距，不再连成一片 */
+    .pagination .page-item {
+        margin: 0 3px;
+    }
+
+    /* 3. 按钮独立圆角及主题色 */
+    .pagination .page-link {
+        border-radius: 5px !important; /* 强制独立圆角 */
+        color: #447e9b;                 /* Spacelab 主题蓝 */
+        border: 1px solid #dee2e6;
+        padding: 0.5rem 0.8rem;
+        transition: all 0.2s;
+    }
+
+    /* 4. 悬停效果：背景变蓝，文字变白 */
+    .pagination .page-link:hover {
+        background-color: #447e9b;
+        color: white;
+        border-color: #447e9b;
+    }
+
+    /* 5. 中间“第x/x页”的指示框样式：去掉框感，使其像文字提醒 */
+    .pagination .page-item.disabled .page-link {
+        background-color: transparent;
+        border: none;
+        color: #6c757d;
+        font-weight: bold;
+    }
+    </style>
+
+
     {% bootstrap_javascript %}
 </head>
 <body>
 
-    <!-- 导航栏 -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'blogs:index' %}">Blog Home</a>
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow">
+    <div class="container">
+        <!-- 1. 品牌名称 -->
+        <a class="navbar-brand fw-bold" href="{% url 'blogs:index' %}">Hz Blog Home</a>
 
-            <!-- 新增：右侧用户菜单 -->
-            <div class="navbar-nav ms-auto">
+        <!-- 2. 搜索框 (在移动端会自动折叠，在大屏幕显示在左侧) -->
+        <form class="d-flex ms-lg-3" action="{% url 'blogs:index' %}" method="get">
+            <div class="input-group">
+                <input class="form-control form-control-sm" type="search" name="q"
+                       placeholder="搜索标题..." aria-label="Search" value="{{ request.GET.q }}">
+                <button class="btn btn-sm btn-light" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <!-- 3. 手机端折叠按钮 -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- 4. 导航菜单内容 -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto d-flex align-items-center gap-2">
+
+                <!-- GitHub 图标 -->
+                <a href="https://github.com/Hor1zen/homework4_blog" target="_blank"
+                   class="nav-link p-2 text-white-50" title="View on GitHub">
+                    <i class="bi bi-github fs-4"></i>
+                </a>
+
                 {% if user.is_authenticated %}
-                    <span class="navbar-text me-3">你好, {{ user.username }}</span>
-                    <!-- 表单提交方式实现注销 (Django 5.0+ 标准做法) -->
-                     <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+                    <!-- 用户信息 -->
+                    <span class="navbar-text text-white me-2">
+                        <i class="bi bi-person-circle"></i> {{ user.username }}
+                    </span>
+
+                    <!-- 注销按钮 -->
+                    <form action="{% url 'users:logout' %}" method="post" class="m-0">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-secondary btn-sm">注销</button>
+                        <button type="submit" class="btn btn-outline-light btn-sm">注销</button>
                     </form>
                 {% else %}
-                    <a class="nav-link" href="{% url 'users:register' %}">注册</a>
-                    <a class="nav-link" href="{% url 'users:login' %}">登录</a>
+                    <!-- 未登录状态 -->
+                    <a class="btn btn-sm btn-outline-light" href="{% url 'users:login' %}">登录</a>
+                    <a class="btn btn-sm btn-light text-primary" href="{% url 'users:register' %}">注册</a>
                 {% endif %}
+
             </div>
         </div>
-    </nav>
-
-    <!-- 页面具体内容挖孔 -->
-    <div class="container">
-        {% block content %}{% endblock content %}
     </div>
+</nav>
+
+<!-- 页面具体内容挖孔 -->
+<div class="container">
+    {% block content %}{% endblock content %}
+</div>
 
 </body>
+<footer class="footer mt-5 py-3 bg-light">
+    <div class="container text-center">
+        <span class="text-muted">© 2025 Hz Blog Project</span>
+    </div>
+</footer>
 </html>

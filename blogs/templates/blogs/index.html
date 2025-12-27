@@ -1,35 +1,105 @@
-<!-- blogs/templates/blogs/index.html -->
 {% extends "blogs/base.html" %}
+{% load markdownify %}
 
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center">
-        <h1>Latest Posts</h1>
-        <a href="{% url 'blogs:new_post' %}" class="btn btn-primary">
-            + 写文章
-        </a>
-    </div>
-    <hr>
-    <!-- ... 下面是原来的循环代码 ... -->
+<!-- 1. 新增：外层包裹 (居中布局) -->
+<div class="row justify-content-center">
+    <!-- 2. 新增：限制宽度 (在中大屏幕上只占 10格 或 8格) -->
+    <div class="col-md-10 col-lg-8">
 
-    {% for post in posts %}
-        <div class="card mb-3">
+        <!-- === 原有的内容开始 === -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Latest Posts</h1>
+            <a href="{% url 'blogs:new_post' %}" class="btn btn-primary">
+                + 写文章
+            </a>
+        </div>
+        <hr>
+
+        {% for post in posts %}
+        <div class="card mb-3 shadow-sm"> <!-- 加个 shadow-sm 稍微有点立体感 -->
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>
-                {{ post.date_added|date:'Y-m-d H:i' }}&nbsp;|&nbsp;
-                <strong class="text-muted">作者: {{ post.owner }}</strong>
-                </span>
-                <!-- 新增：编辑链接 -->
-                <a href="{% url 'blogs:edit_post' post.id %}" class="btn btn-sm btn-outline-secondary">
-                    编辑
-                </a>
+                        <span>
+                            {{ post.date_added|date:'Y-m-d H:i' }}
+                            &nbsp;|&nbsp;
+                            <strong class="text-muted">作者: {{ post.owner }}</strong>
+                        </span>
+                {% if user == post.owner %}
+                <!-- 使用 d-flex 和 gap-2 自动产生 0.5rem 的间距，且垂直居中 -->
+                <div class="d-flex align-items-center gap-2">
+
+                    <a href="{% url 'blogs:edit_post' post.id %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i> 编辑
+                    </a>
+
+                    <form action="{% url 'blogs:delete_post' post.id %}" method="post"
+                          onsubmit="return confirm('确定要永久删除这篇帖子吗？');" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i> 删除
+                        </button>
+                    </form>
+
+                </div>
+                {% endif %}
+
             </div>
             <div class="card-body">
                 <h4 class="card-title">{{ post.title }}</h4>
-                <p class="card-text">{{ post.text|linebreaks }}</p>
+                <div class="card-text mt-3"> <!-- 加个 mt-3 拉开标题和正文间距 -->
+                    {{ post.text|markdownify }}
+                </div>
             </div>
         </div>
-    {% empty %}
+        {% empty %}
         <p>还没有发布任何帖子。</p>
-    {% endfor %}
+        {% endfor %}
+        <!-- === 原有的内容结束 === -->
+        <!-- blogs/templates/blogs/index.html -->
+
+<nav aria-label="Page navigation" class="mt-4 mb-5">
+    <!-- 关键修改：去掉 shadow-sm，确保它不是一个整体长方块 -->
+    <ul class="pagination justify-content-center">
+
+        <!-- 首页与上一页 -->
+        {% if posts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">
+                    <i class="bi bi-chevron-double-left"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">
+                    上一页
+                </a>
+            </li>
+        {% endif %}
+
+        <!-- 页码指示 (现在的 CSS 会让它看起来像悬浮文字) -->
+        <li class="page-item disabled">
+            <span class="page-link">
+                {{ posts.number }} / {{ posts.paginator.num_pages }}
+            </span>
+        </li>
+
+        <!-- 下一页与尾页 -->
+        {% if posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.next_page_number }}{% if query %}&q={{ query }}{% endif %}">
+                    下一页
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">
+                    <i class="bi bi-chevron-double-right"></i>
+                </a>
+            </li>
+        {% endif %}
+
+    </ul>
+</nav>
+
+    </div> <!-- 对应 col-lg-8 -->
+</div> <!-- 对应 row -->
 
 {% endblock content %}

@@ -37,11 +37,9 @@ def edit_post(request, post_id):
     """编辑既有帖子"""
     post = get_object_or_404(BlogPost, id=post_id)
 
-    # ==============================
-    # 核心修改：禁止编辑别人的文章
-    # ==============================
     if post.owner != request.user:
-        raise Http404 # 或者用 HttpResponseForbidden()
+        # 以前是 raise Http404，现在改成渲染提示页
+        return render(request, 'blogs/not_owner.html')
 
     if request.method != 'POST':
         form = BlogPostForm(instance=post)

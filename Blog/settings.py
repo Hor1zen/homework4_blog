@@ -130,3 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 未登录用户的重定向地址
 LOGIN_URL = 'users:login'
+# 登录成功去主页
+LOGIN_REDIRECT_URL = 'blogs:index'
+# 注销成功去主页
+LOGOUT_REDIRECT_URL = 'blogs:index'

@@ -1,0 +1,14 @@
+<!-- blogs/templates/blogs/edit_post.html -->
+{% extends "blogs/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h2>编辑文章: {{ post.title }}</h2>
+
+    <form action="{% url 'blogs:edit_post' post.id %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bootstrap_button button_type="submit" content="保存修改" %}
+    </form>
+
+{% endblock content %}

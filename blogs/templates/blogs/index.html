@@ -13,8 +13,12 @@
 
     {% for post in posts %}
         <div class="card mb-3">
-            <div class="card-header">
-                {{ post.date_added|date:'Y-m-d H:i' }}
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>{{ post.date_added|date:'Y-m-d H:i' }}</span>
+                <!-- 新增：编辑链接 -->
+                <a href="{% url 'blogs:edit_post' post.id %}" class="btn btn-sm btn-outline-secondary">
+                    编辑
+                </a>
             </div>
             <div class="card-body">
                 <h4 class="card-title">{{ post.title }}</h4>

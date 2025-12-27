@@ -1,0 +1,18 @@
+<!-- blogs/templates/blogs/new_post.html -->
+{% extends "blogs/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h2>撰写新文章</h2>
+
+    <form action="{% url 'blogs:new_post' %}" method="post">
+        {% csrf_token %}
+
+        <!-- 自动渲染漂亮的表单字段 -->
+        {% bootstrap_form form %}
+
+        <!-- 提交按钮 -->
+        {% bootstrap_button button_type="submit" content="发布文章" %}
+    </form>
+
+{% endblock content %}

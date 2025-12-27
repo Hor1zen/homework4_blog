@@ -2,8 +2,14 @@
 {% extends "blogs/base.html" %}
 
 {% block content %}
-    <h1>Latest Posts</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Latest Posts</h1>
+        <a href="{% url 'blogs:new_post' %}" class="btn btn-primary">
+            + 写文章
+        </a>
+    </div>
     <hr>
+    <!-- ... 下面是原来的循环代码 ... -->
 
     {% for post in posts %}
         <div class="card mb-3">

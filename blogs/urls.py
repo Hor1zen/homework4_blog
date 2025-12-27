@@ -7,4 +7,5 @@ app_name = 'blogs'  # <-- 命名空间，这对以后写链接非常重要
 urlpatterns = [
     # 主页
     path('', views.index, name='index'),
+    path('new_post/', views.new_post, name='new_post'),
 ]

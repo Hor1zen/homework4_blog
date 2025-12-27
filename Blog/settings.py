@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'blogs',
     # 第三方库
     'django_bootstrap5',
-
+    # 用户
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -126,3 +127,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 未登录用户的重定向地址
+LOGIN_URL = 'users:login'

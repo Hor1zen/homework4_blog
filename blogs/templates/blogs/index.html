@@ -1,0 +1,22 @@
+<!-- blogs/templates/blogs/index.html -->
+{% extends "blogs/base.html" %}
+
+{% block content %}
+    <h1>Latest Posts</h1>
+    <hr>
+
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-header">
+                {{ post.date_added|date:'Y-m-d H:i' }}
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ post.title }}</h4>
+                <p class="card-text">{{ post.text|linebreaks }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p>还没有发布任何帖子。</p>
+    {% endfor %}
+
+{% endblock content %}

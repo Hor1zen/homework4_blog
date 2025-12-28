@@ -2,6 +2,8 @@
 
 一个基于 Django 的博客系统，支持用户注册、登录、创建和管理博客文章。
 
+![爱丽丝](Sample Image/alice3.png)
+
 ## 项目链接
 
 - GitHub: https://github.com/Hor1zen/homework4_blog
@@ -67,8 +69,9 @@ pip install -r requirements.txt
 
 ### 5. 数据库迁移
 
+由于本项目已包含所有的数据库迁移文件（Migrations），你只需直接运行迁移命令来生成本地数据库：
+
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 

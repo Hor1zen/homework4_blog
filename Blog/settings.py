@@ -175,7 +175,7 @@ MARKDOWNIFY = {
                 "subscript": False,  # ✅ 只关这个
             },
             "pymdownx.tasklist": {
-                "custom_checkbox": True,
+                "custom_checkbox": False,
             },
         },
 

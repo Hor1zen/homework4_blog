@@ -67,8 +67,9 @@ pip install -r requirements.txt
 
 ### 5. 数据库迁移
 
+由于本项目已包含所有的数据库迁移文件（Migrations），你只需直接运行迁移命令来生成本地数据库：
+
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 

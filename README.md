@@ -2,7 +2,9 @@
 
 一个基于 Django 的博客系统，支持用户注册、登录、创建和管理博客文章。
 
-![爱丽丝](Sample Image/alice3.png)
+<p align="center">
+  <img src="\Sample Image\alice3" width="200">
+</p>
 
 ## 项目链接
 

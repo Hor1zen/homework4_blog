@@ -2,6 +2,8 @@
 
 一个基于 Django 的博客系统，支持用户注册、登录、创建和管理博客文章。
 
+![爱丽丝](Sample Image/alice3.png)
+
 ## 项目链接
 
 - GitHub: https://github.com/Hor1zen/homework4_blog
